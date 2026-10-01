@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Análisis Digital del Negocio | Hotel Posada San José</title>
+    <style>
+        :root {
+            --bg-canvas: #EBE8F5;
+            --app-bg: #FAFAFC;
+            --text-main: #1C1C1E;
+            --text-muted: #8E8E93;
+            
+            /* Paleta de colores */
+            --card-purple: #C8C5FF;
+            --card-yellow: #FFD275;
+            --card-blue: #BCE3FF;
+            --card-pink: #FFC0E7;
+            --card-red: #FFD6D6;
+            --card-green: #D1F2D9;
+            --card-white: #FFFFFF;
+
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        .mobile-shell {
+            width: 100%;
+            max-width: 430px;
+            background-color: var(--app-bg);
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 24px 20px 100px 20px;
+            position: relative;
+            min-height: 90vh;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: var(--card-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .greeting h2 {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .greeting h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .search-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--card-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        /* HERO BANNER */
+        .hero-banner {
+            background-color: var(--card-purple);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .hero-banner .badge {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .hero-banner h3 {
+            font-size: 1.35rem;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #1A183B;
+            margin-bottom: 8px;
+        }
+
+        .hero-banner p {
+            font-size: 0.85rem;
+            color: #4A4670;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        /* FECHA DINÁMICA */
+        .date-strip {
+            display: flex;
+            justify-content: space-between;
+            background: var(--card-white);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .date-item {
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            flex: 1;
+        }
+
+        .date-item.active {
+            background-color: var(--text-main);
+            color: #FFF;
+        }
+
+        .date-item .day {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .date-item .num {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        /* SECCIONES Y CONTENIDOS */
+        .section-header {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px;
+            margin-top: 24px;
+        }
+
+        .section-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .section-header span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .content-card {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .content-card h4 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .content-card p {
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .content-card ul {
+            list-style: none;
+        }
+
+        .content-card ul li {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.35;
+        }
+
+        .content-card.positive ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #2ECC71;
+            font-weight: bold;
+        }
+
+        .content-card.negative ul li::before {
+            content: "✕";
+            position: absolute;
+            left: 0;
+            color: #E74C3C;
+            font-weight: bold;
+        }
+
+        /* HALLAZGOS CRÍTICOS */
+        .alert-card {
+            background-color: var(--card-red);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-card h3 {
+            color: #000000;
+            font-size: 1.4rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .alert-card ul {
+            list-style: none;
+        }
+
+        .alert-card li {
+            font-size: 0.85rem;
+            color: #4A0000;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .alert-card li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 0.8rem;
+        }
+
+        /* BENTO CARDS */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .bento-card {
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card.yellow { background-color: var(--card-yellow); }
+        .bento-card.blue { background-color: var(--card-blue); }
+        .bento-card.pink { background-color: var(--card-pink); }
+        .bento-card.green { background-color: var(--card-green); }
+
+        .bento-card .chip {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .bento-card h4 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #1A183B;
+            margin-bottom: 8px;
+        }
+
+        .bento-card p, .bento-card ul {
+            font-size: 0.85rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .bento-card ul {
+            list-style: none;
+            margin-top: 6px;
+        }
+
+        .bento-card ul li {
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .bento-card ul li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .pillars-flex {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+
+        .pillars-flex::-webkit-scrollbar { display: none; }
+
+        .pillar-item {
+            min-width: 130px;
+            background: var(--card-white);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            flex-shrink: 0;
+        }
+
+        .pillar-item h5 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text-main);
+        }
+
+        .pillar-item p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .social-btn {
+            flex: 1;
+            background: var(--card-white);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.8rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .closing-card {
+            background-color: var(--card-white);
+            border-left: 4px solid var(--text-main);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .closing-card p {
+            font-size: 0.85rem;
+            color: #333;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* BOTTOM NAV BAR */
+        .bottom-nav {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background-color: var(--text-main);
+            border-radius: 25px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .bottom-nav .contact-info {
+            color: #FFFFFF;
+            font-size: 0.78rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom-nav .contact-info strong {
+            font-size: 0.85rem;
+            color: var(--card-yellow);
+        }
+
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 0; }
+            .mobile-shell {
+                border-radius: 0;
+                min-height: 100vh;
+                padding-bottom: 100px;
+            }
+            .bottom-nav {
+                position: fixed;
+                bottom: 12px;
+                left: 12px;
+                right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-shell">
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="user-info">
+            <div class="avatar">SJ</div>
+            <div class="greeting">
+                <h2>Análisis Digital del Negocio</h2>
+                <h1>Hotel Posada San José</h1>
+            </div>
+        </div>
+        <div class="search-icon">🔍</div>
+    </header>
+
+    <!-- HERO BANNER -->
+    <div class="hero-banner">
+        <span class="badge">Estrategia Comercial</span>
+        <h3>Percepción del usuario sobre el hotel y sus servicios</h3>
+        <p>Evaluación integral de la reputación en línea, experiencia del cliente en tránsito y oportunidades de optimización en canales digitales.</p>
+    </div>
+
+    <!-- FECHA DINÁMICA -->
+    <div class="date-strip" id="dateStrip"></div>
+
+    <!-- PERCEPCIÓN DE LOS VIAJEROS -->
+    <section>
+        <div class="section-header">
+            <h3>Cómo perciben el hotel los viajeros</h3>
+            <span>Resumen general de audiencia</span>
+        </div>
+
+        <div class="content-card">
+            <p>A partir de los comentarios suministrados, la percepción de los huéspedes y clientes sobre el Hotel Posada San José es mixta, pero se inclina ligeramente hacia lo positivo cuando la expectativa es simplemente encontrar un lugar funcional para descansar en tránsito, y negativa cuando se busca confort o vacaciones prolongadas.</p>
+        </div>
+
+        <!-- ASPECTOS POSITIVOS CONCRETOS -->
+        <div class="content-card positive" style="border-left: 4px solid #2ECC71;">
+            <h4>🌟 Aspectos Positivos (Lo que más valoran)</h4>
+            <ul>
+                <li><strong>Ubicación estratégica y conectividad</strong></li>
+                <li><strong>Relación costo-beneficio (para estancias breves)</strong></li>
+                <li><strong>Área de la alberca y espacio exterior</strong></li>
+                <li><strong>Comodidad de camas y aire acondicionado (cuando funciona bien)</strong></li>
+            </ul>
+        </div>
+
+        <!-- ASPECTOS NEGATIVOS CONCRETOS -->
+        <div class="content-card negative" style="border-left: 4px solid #E74C3C;">
+            <h4>⚠ Aspectos Negativos (Las principales quejas)</h4>
+            <ul>
+                <li><strong>Inconsistencia en los servicios básicos</strong></li>
+                <li><strong>Mantenimiento y mantenimiento de la alberca</strong></li>
+                <li><strong>Discrepancias en expectativas y fotos</strong></li>
+                <li><strong>Malentendidos en cobros y políticas</strong></li>
+            </ul>
+        </div>
+
+        <div class="content-card" style="background-color: #F4F6F7;">
+            <h4>📊 Resumen Ejecutivo</h4>
+            <p style="margin-bottom:0;">La gente percibe el Hotel Posada San José como un hotel sencillo de paso, ideal si la prioridad es ahorrar, descansar una noche, estacionar el auto con seguridad o tener una base cerca de las terminales de transporte. No es percibido como un destino de descanso vacacional ni de lujo, sino como un hospedaje práctico para viajeros con presupuesto medio/bajo o de negocios que van de paso por Pochutla.</p>
+        </div>
+    </section>
+
+    <!-- HALLAZGOS CRÍTICOS -->
+    <section>
+        <div class="alert-card">
+            <h3>Hallazgos críticos</h3>
+            <ul>
+                <li><strong>Imposibilidad de estimar tarifas:</strong> No poder tener una idea aproximada del costo por noche.</li>
+                <li><strong>Link Roto en Sitio Web:</strong> El enlace de Booking redirige por error a un departamento en Génova, Italia.</li>
+                <li><strong>Bloqueo en Expedia:</strong> No fue posible realizar una reserva en ninguna fecha del mes de octubre.</li>
+                <li><strong>Falla en Hoteles.com:</strong> La experiencia fue similar a Expedia, dejando al usuario sin disponibilidad online.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- LO QUE VALE DESTACAR -->
+    <section>
+        <div class="section-header">
+            <h3>Lo que vale destacar</h3>
+            <span>Vertientes clave para el negocio</span>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card blue">
+                <span class="chip">Oportunidad Pionera</span>
+                <h4>Co-Working Zone</h4>
+                <p>Implementar y posicionar una zona de trabajo remoto en Pochutla. Existe la posibilidad real de que este servicio cuente con su <strong>propio Instagram independiente</strong> y sea identificado visualmente por los viajeros e itinerantes como <em>"EL" co-working de la zona</em>, atrayendo a nómadas digitales antes de internarse en las playas.</p>
+            </div>
+
+            <div class="bento-card pink">
+                <span class="chip">Monetización Adicional</span>
+                <h4>El hotel como un punto de venta que genera comisiones</h4>
+                <p>Aprovechar la recepción y espacios comunes como vitrina para exhibir productos artesanales, cosmética local o marcas boutique bajo un modelo de comisión por venta.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- PILARES DE REDES -->
+    <section>
+        <div class="section-header">
+            <h3>Pilares de Redes Sociales</h3>
+            <span>Criterios de Éxito</span>
+        </div>
+
+        <div class="pillars-flex">
+            <div class="pillar-item">
+                <h5>Frecuencia</h5>
+                <p>Presencia constante para nutrir los algoritmos.</p>
+            </div>
+            <div class="pillar-item">
+                <h5>Pertinencia</h5>
+                <p>Mensajes adecuados en el momento exacto de viaje.</p>
+            </div>
+            <div class="pillar-item">
+                <h5>Relevancia</h5>
+                <p>Respuestas claras a tarifas, ubicación y servicios.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- REDES BILINGÜES -->
+    <section>
+        <div class="section-header">
+            <h3>Redes bilingües</h3>
+            <span>Pensar en qué tan rápido puede encontrarnos el viajero internacional</span>
+        </div>
+
+        <div class="bento-card green">
+            <span class="chip">Ecosistema Social</span>
+            <h4>Instagram y Facebook Adaptados</h4>
+            <p>Creación de contenido bilingüe (ES/EN) pensado en la inmediatez que exige el viajero internacional que transita hacia las playas o Chiapas.</p>
+            <div class="social-links">
+                <a href="https://www.instagram.com/posadasanjosehotel" target="_blank" class="social-btn">📸 Instagram</a>
+                <a href="https://www.facebook.com/Posadasanjosepochutla" target="_blank" class="social-btn">📘 Facebook</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- EMBUDO DE CAPTACIÓN -->
+    <section style="margin-top: 20px;">
+        <div class="section-header">
+            <h3>Embudo de captación de clientes</h3>
+            <span>La importancia del sitio web y la landing page</span>
+        </div>
+
+        <div class="bento-card yellow">
+            <span class="chip">Mobile-First</span>
+            <h4>Optimización Web & BioLink</h4>
+            <p>Transformación del sitio web en una herramienta que resuelva dudas en menos de 5 segundos:</p>
+            <ul>
+                <li>Ubicación accesible y clara con Google Maps.</li>
+                <li>Visualización transparente de formas de pago.</li>
+                <li>Descuentos activos para grupos y familias.</li>
+                <li>Asistencia directa para llegar a Mazunte y Zipolite.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CIERRE -->
+    <div class="closing-card">
+        <p>Algunas de las acciones aquí propuestas tienen ya una base sólida sobre la cual operar, el perfeccionamiento de cada una de estas áreas tiene el potencial de generar más clientes, más ingresos y una mejor reputación en redes, lo que eleva la probabilidad de ser digitalmente más visibles y generar un ciclo positivo de buen servicio y clientes felices.</p>
+    </div>
+
+    <!-- BOTTON NAV -->
+    <nav class="bottom-nav">
+        <div class="contact-info">
+            <span>Contacto directo:</span>
+            <strong>Jonathan Písil</strong>
+        </div>
+        <a href="https://wa.me/525631924145" target="_blank" class="whatsapp-btn">
+            💬 WhatsApp
+        </a>
+    </nav>
+
+</div>
+
+<script>
+    function renderDates() {
+        const dateStrip = document.getElementById('dateStrip');
+        const today = new Date();
+        const days = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
+        
+        let html = '';
+        for (let i = -1; i <= 2; i++) {
+            const d = new Date();
+            d.setDate(today.getDate() + i);
+            const isToday = i === 0 ? 'active' : '';
+            
+            html += `
+                <div class="date-item ${isToday}">
+                    <div class="day">${days[d.getDay()]}</div>
+                    <div class="num">${d.getDate()}</div>
+                </div>
+            `;
+        }
+        dateStrip.innerHTML = html;
+    }
+    renderDates();
+</script>
+
+</body>
+</html>
